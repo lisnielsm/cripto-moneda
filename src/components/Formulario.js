@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 
+import useMoneda from '../hooks/useMoneda';
+
 const Boton = styled.input`
 	margin-top: 20px;
 	font-weight: bold;
@@ -20,9 +22,21 @@ const Boton = styled.input`
 `;
 
 const Formulario = () => {
+
+	const MONEDAS = [
+		{ codigo: 'USD', nombre: 'Dolar de Estados Unidos' },
+		{ codigo: 'MXN', nombre: 'Peso Mexicano' },
+		{ codigo: 'EUR', nombre: 'Euro' },
+		{ codigo: 'GBP', nombre: 'Libra Esterlina' }
+	]
+
+	// ejecutar useMoneda
+	const [moneda, SelectMonedas] = useMoneda('Elige tu moneda', '', MONEDAS);
 	
 	return ( 
         <form>
+
+			<SelectMonedas />
 
             <Boton
                 type="submit"
