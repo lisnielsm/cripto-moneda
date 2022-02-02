@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import imagen from './cryptomonedas.png';
 import Formulario from './components/Formulario';
+import Cotizacion from './components/Cotizacion';
 
 const Contenedor = styled.div`
 	max-width: 900px;
@@ -79,6 +80,8 @@ function App() {
 					guardarMoneda={guardarMoneda}
 					guardarCriptomoneda={guardarCriptomoneda}
 				/>
+
+				<Cotizacion resultado={resultado} />
 			</div>
 
 		</Contenedor>
