@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
 
 import imagen from './cryptomonedas.png';
 import Formulario from './components/Formulario';
 import Cotizacion from './components/Cotizacion';
+import Spinner from './components/Spinner';
 
 const Contenedor = styled.div`
 	max-width: 900px;
@@ -41,28 +42,41 @@ const Heading = styled.h1`
 
 function App() {
 
-	const [moneda, guardarMoneda] = useState('');
-	const [criptomoneda, guardarCriptomoneda] = useState('');
-	const [resultado, guardarResultado] = useState({});
+	const [ moneda, guardarMoneda ] = useState('');
+	const [ criptomoneda, guardarCriptomoneda ] = useState('');
+	const [ resultado, guardarResultado ] = useState({});
+	const [ cargando, guardarCargando ] = useState(false);
 
 	useEffect(() => {
 
 		const cotizarCriptomoneda = async () => {
 			// evitamos la ejecucion la primera vez
-			if (moneda === '') return;
+			if(moneda === '') return;
 
 			// consultar la api para la cotizacion
 			const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
 
 			const resultado = await axios.get(url);
 
-			//  guardar cotizacion
-			guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda]);
+			// mostrar el spinner
+			guardarCargando(true);
+
+			// ocultar el spinner y mostrar el resultado
+			setTimeout(() => {
+				
+				// cambiar el esatdo de cargando
+				guardarCargando(false);
+
+				//  guardar cotizacion
+				guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda]);
+			}, 3000)
 		};
 
 		cotizarCriptomoneda();
 
 	}, [moneda, criptomoneda]);
+
+	const componente = (cargando ? <Spinner/> : <Cotizacion resultado={resultado} />)
 
 	return (
 		<Contenedor>
@@ -76,12 +90,13 @@ function App() {
 			<div>
 				<Heading>Cotiza Criptomonedas al Instante</Heading>
 
-				<Formulario
+				<Formulario 
 					guardarMoneda={guardarMoneda}
 					guardarCriptomoneda={guardarCriptomoneda}
 				/>
 
-				<Cotizacion resultado={resultado} />
+				{componente}
+				
 			</div>
 
 		</Contenedor>

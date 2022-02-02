@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import useMoneda from '../hooks/useMoneda';
 import useCriptomoneda from '../hooks/useCriptomoneda';
@@ -27,8 +28,8 @@ const Boton = styled.input`
 const Formulario = ({ guardarMoneda, guardarCriptomoneda }) => {
 
 	// state del listado de criptomonedas
-	const [listacripto, guardarCriptomonedas] = useState([]);
-	const [error, guardarError] = useState(false);
+	const [ listacripto, guardarCriptomonedas ] = useState([]);
+	const [ error, guardarError ] = useState(false);
 
 	const MONEDAS = [
 		{ codigo: 'USD', nombre: 'Dolar de Estados Unidos' },
@@ -36,12 +37,12 @@ const Formulario = ({ guardarMoneda, guardarCriptomoneda }) => {
 		{ codigo: 'EUR', nombre: 'Euro' },
 		{ codigo: 'GBP', nombre: 'Libra Esterlina' }
 	]
-
+    
 	// ejecutar useMoneda
-	const [moneda, SelectMonedas] = useMoneda('Elige tu moneda', '', MONEDAS);
+	const [ moneda, SelectMonedas ] = useMoneda('Elige tu moneda', '', MONEDAS);
 
 	// ejecutar useCriptomoneda
-	const [criptomoneda, SelectCripto] = useCriptomoneda('Elige tu criptomoneda', '', listacripto);
+	const [ criptomoneda, SelectCripto ] = useCriptomoneda('Elige tu criptomoneda', '', listacripto);
 
 	useEffect(() => {
 		const consultarAPI = async () => {
@@ -59,7 +60,8 @@ const Formulario = ({ guardarMoneda, guardarCriptomoneda }) => {
 		e.preventDefault();
 
 		// validar si ambos campos estan llenos
-		if (moneda.trim() === '' || criptomoneda.trim() === '') {
+		if(moneda.trim() === '' || criptomoneda.trim() === '')
+		{
 			guardarError(true);
 			return;
 		}
@@ -72,11 +74,10 @@ const Formulario = ({ guardarMoneda, guardarCriptomoneda }) => {
 	}
 	
 	return ( 
-		<form
+        <form
 			onSubmit={cotizarMoneda}
 		>
-
-			{error ? <Error mensaje="Todos los campos son obligatorios" /> : null}
+			{ error ? <Error mensaje="Todos los campos son obligatorios"/> : null }
 
 			<SelectMonedas />
 
@@ -89,6 +90,11 @@ const Formulario = ({ guardarMoneda, guardarCriptomoneda }) => {
 
         </form>
      );
+}
+
+Formulario.propTypes = {
+	guardarMoneda: PropTypes.func.isRequired,
+	guardarCriptomoneda: PropTypes.func.isRequired,
 }
  
 export default Formulario;
